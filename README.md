@@ -1,7 +1,7 @@
 # Wireless Analysis With Kismet and ELK
 A project for analyzing Kismet data in the ELK stack. 
 
-Presented at Bsides Boise 2020.
+Presented at Bsides Idaho 2020.
 
 # Zero to Hero
 1. Download the Bitnami VM (https://bitnami.com/stack/elk/virtual-machine)
