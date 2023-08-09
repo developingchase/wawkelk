@@ -2,7 +2,7 @@
 # process the devices and extract certain fields
 # finally shove the devices into elasticsearch
 
-version = "1.0"
+version = "1.1"
 print("""
  __    __   ____  __    __  __  _    ___  _      __  _ 
 |  |__|  | /    ||  |__|  ||  |/ ]  /  _]| |    |  |/ ]
@@ -39,18 +39,18 @@ parser.add_argument('-u',dest='username', action='store',help='Elasticsearch use
 parser.add_argument('-p',dest='password', action='store',help='Elasticsearch password\n', required=True)
 args = parser.parse_args()
 
-
 def es_connect():
     host = str(args.es)
     port = 9200
     es_username = str(args.username)
     es_password = str(args.password)
-    es = Elasticsearch([host],http_auth=(es_username,es_password))
+    es = Elasticsearch([host],basic_auth=(es_username,es_password))
+    #print(es.info())
     if es.ping():
         print("[+] Connection established to Elasticsearch")
     else:
         print("[!] Connect to Elasticsearch failed")
-        print("Host: " + str(host) + ", Port: " + str(port) + ", Username: " + es_username + ", Password: " + es_password)
+        print("Host: " + str(host) + ", Username: " + es_username + ", Password: " + es_password)
         exit(0)
     return es
 
@@ -145,7 +145,7 @@ def es_create_index(es,es_index_name='test_index'):
     }
 
     try:
-        if not es.indices.exists(es_index_name):
+        if not es.indices.exists(index=es_index_name):
             es.indices.create(index=es_index_name, body=settings)
             print('[+] Created ES index named ' + str(es_index_name))
         created = True
