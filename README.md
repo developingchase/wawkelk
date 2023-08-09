@@ -3,27 +3,31 @@ A project for analyzing Kismet data in the ELK stack.
 
 Presented at Bsides Idaho 2020 (https://www.youtube.com/watch?v=MU3hu3WuRA0). Slides in repo (Wireless Analysis with Kismet and ELK (WAWKELK).pdf).
 
+NEW - Updated in 2023 for the new version of ELK that had some breaking changes.
+
 # Zero to Hero
 1. Download the Bitnami VM (https://bitnami.com/stack/elk/virtual-machine)
 2. Configure the network interface as appropriate, then start the Bitnami VM
 3. Note the IP address and Kibana username and password
 4. Log in and change the default Linux password (bitnami/bitnami)
-5. (If you want to use SSH) Remove the SSH blocker: rm /etc/ssh/ssh_to_not_be_run
-6. (If you want to use SSH) Start the SSH server: sudo systemctl enable ssh && systemctl start ssh 
+5. (If you want to use SSH) Remove the SSH blocker: sudo rm -f /etc/ssh/sshd_to_not_be_run
+6. (If you want to use SSH) Start the SSH server: sudo systemctl enable ssh && systemctl start ssh
+6a. There are two options - key-based or password based auth - read here for more details - https://docs.bitnami.com/virtual-machine/faq/get-started/enable-ssh-keys/ & https://docs.bitnami.com/virtual-machine/faq/get-started/enable-ssh-password/ 
 7. Copy the two Logstash pipeline files into /opt/bitnami/logstash/pipeline/
 8. Change the URL and username/passwords in each file to match your own settings
-9. Launch Kibana in web browser
-10. Navigate to Management > Dev Tools
+9. Launch Kibana in web browser (Click "Explore on my own")
+10. Navigate the menu to Management > Dev Tools
 11. Using the values in mappings.md, create the kismet_alerts and kismet_device_activity mappings
-12. Restart Logstash ```sudo /opt/bitnami/ctlscript.sh restart logstash```
-13. Navigate to Management > Stack Management > Index Patterns
-14. Wait until data has been populated (based on the timers in the Logstash pipeline files)
-15. Click Create Index Pattern
-16. Create an index pattern for each index
-17. Navigate to Discover, select an index pattern, and browse the data
-18. Create visualizations for the data
-19. Create dashboards of the visualizations
-20. Use the kismetdevices_to_elk.py to push already collected kismetdb files to Elasticsearch
+12. Restart Logstash ```sudo /opt/bitnami/ctlscript.sh restart logstash```; wait for ~2-3 minutes for data to reach Elasticsearch
+13. In Kibana 8.x or greater, create data viewsCreate data view
+14. Provide a Name, then enter the "kismet_alerts" index
+15. Select @timestamp for the Timestamp field
+16. Save data view to Kibana
+17. Repeat for the "kismet_device_activity" index
+18. Navigate to Discover, select a data view pattern, and browse the data
+19. Create visualizations for the data
+20. Create dashboards of the visualizations
+21. Use the kismetdevices_to_elk.py to push already collected kismetdb files to Elasticsearch
 
 # Bitnami ELK Stack VM Notes
 ```/home/bitnami/bitnami_credentials``` < File containing the username/password for Kibana/ELK/etc 
@@ -61,11 +65,11 @@ There are two provided Logstash pipeline files.
 - Add "```stdout { codec => rubydebug }```" in the output section when debugging
 - Logstash combines all the pipeline files so if you use multiple pipeline conf files, ensure your filters sections are looking at the index first, otherwise they will attempt to apply to all pipelines
 - Triple check syntax; look for missing "}" values
-- Monitor the log file ```tail -f /opt/bitnami/logstash/log/logstash.log``` 
+- Monitor the log file ```tail -f /opt/bitnami/logstash/logs/logstash-plain.log``` 
 
 # Kibana
 
-## Maps
+## Maps (Update! Kibana 8.x has better builtin support for maps, with improved zoom layers and a default street map, so unless you want to mess around with imagery, you don't need to do this. I'll leave it here for those that may still need it.)
 * Great resource for WMS options: https://www.elastic.co/blog/custom-basemaps-for-region-and-coordinate-maps-in-kibana
 * If you use Maptiler, here are the settings for the Kibana Coordinates Visualization:
   - Options > Base layer settings
