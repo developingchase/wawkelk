@@ -3,7 +3,7 @@ A project for analyzing Kismet data in the ELK stack.
 
 Presented at Bsides Idaho 2020 (https://www.youtube.com/watch?v=MU3hu3WuRA0). Slides in repo (Wireless Analysis with Kismet and ELK (WAWKELK).pdf).
 
-NEW - Updated in 2023 for the new version of ELK that had some breaking changes.
+NEW - Updated in 2023 for the new version of ELK that had some breaking changes. I've updated the readme and the Python script for uploading an captured Kismet file to ES. However, I haven't tested this exhaustively so you may find issues. Feel free to open issues and I'll get to them as I can.
 
 # Zero to Hero
 1. Download the Bitnami VM (https://bitnami.com/stack/elk/virtual-machine)
@@ -28,6 +28,12 @@ NEW - Updated in 2023 for the new version of ELK that had some breaking changes.
 19. Create visualizations for the data
 20. Create dashboards of the visualizations
 21. Use the kismetdevices_to_elk.py to push already collected kismetdb files to Elasticsearch
+21a. You'll need to change network settings for ES to enable direct connection to port 9200. 
+21b. Edit /opt/bitnami/elasticsearch/config/elasticsearch.yml and change the addresses in network to 0.0.0.0. (https://docs.bitnami.com/virtual-machine/apps/elasticsearch/administration/connect-remotely/)
+21c. I also had to open port 9200 on my firewall (https://docs.bitnami.com/virtual-machine/faq/administration/use-firewall/)
+21d. Warning - this opens up your ELK stack to potential network abuse, so be careful when/where you do this. ES has added a lot of new security features I haven't tested yet. I test this on a local protected network. Please follow ES's guidance for properly securing your stack if using this anywhere other than a local test environment. 
+22.  python3 kismetdevices_to_elk.py -i Kismet-file.kismet -e http://<ELKIP>:9200 -u user -p <password>
+22a. This will put the historic devices into a "kismet_devices" index. You'll need to follow the steps in 13-18 to add a new data view for this index. Pro tip - adding a data view for "kismet_device*" will allow you to see data from both live and historic Kismet data sources. :) 
 
 # Bitnami ELK Stack VM Notes
 ```/home/bitnami/bitnami_credentials``` < File containing the username/password for Kibana/ELK/etc 
