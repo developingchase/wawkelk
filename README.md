@@ -1,4 +1,4 @@
-# Wireless Analysis With Kismet and ELK
+ # Wireless Analysis With Kismet and ELK
 A project for analyzing Kismet data in the ELK stack. 
 
 Presented at Bsides Idaho 2020 (https://www.youtube.com/watch?v=MU3hu3WuRA0). Slides in repo (Wireless Analysis with Kismet and ELK (WAWKELK).pdf).
@@ -12,28 +12,28 @@ NEW - Updated in 2023 for the new version of ELK that had some breaking changes.
 4. Log in and change the default Linux password (bitnami/bitnami)
 5. (If you want to use SSH) Remove the SSH blocker: sudo rm -f /etc/ssh/sshd_to_not_be_run
 6. (If you want to use SSH) Start the SSH server: sudo systemctl enable ssh && systemctl start ssh
-6a. There are two options - key-based or password based auth - read here for more details - https://docs.bitnami.com/virtual-machine/faq/get-started/enable-ssh-keys/ & https://docs.bitnami.com/virtual-machine/faq/get-started/enable-ssh-password/ 
-7. Copy the two Logstash pipeline files into /opt/bitnami/logstash/pipeline/
-8. Change the URL and username/passwords in each file to match your own settings
-9. Launch Kibana in web browser (Click "Explore on my own")
-10. Navigate the menu to Management > Dev Tools
-11. Using the values in mappings.md, create the kismet_alerts and kismet_device_activity mappings
-12. Restart Logstash ```sudo /opt/bitnami/ctlscript.sh restart logstash```; wait for ~2-3 minutes for data to reach Elasticsearch
-13. In Kibana 8.x or greater, create data viewsCreate data view
-14. Provide a Name, then enter the "kismet_alerts" index
-15. Select @timestamp for the Timestamp field
-16. Save data view to Kibana
-17. Repeat for the "kismet_device_activity" index
-18. Navigate to Discover, select a data view pattern, and browse the data
-19. Create visualizations for the data
-20. Create dashboards of the visualizations
-21. Use the kismetdevices_to_elk.py to push already collected kismetdb files to Elasticsearch
-21a. You'll need to change network settings for ES to enable direct connection to port 9200. 
-21b. Edit /opt/bitnami/elasticsearch/config/elasticsearch.yml and change the addresses in network to 0.0.0.0. (https://docs.bitnami.com/virtual-machine/apps/elasticsearch/administration/connect-remotely/)
-21c. I also had to open port 9200 on my firewall (https://docs.bitnami.com/virtual-machine/faq/administration/use-firewall/)
-21d. Warning - this opens up your ELK stack to potential network abuse, so be careful when/where you do this. ES has added a lot of new security features I haven't tested yet. I test this on a local protected network. Please follow ES's guidance for properly securing your stack if using this anywhere other than a local test environment. 
-22.  python3 kismetdevices_to_elk.py -i Kismet-file.kismet -e http://<ELKIP>:9200 -u user -p <password>
-22a. This will put the historic devices into a "kismet_devices" index. You'll need to follow the steps in 13-18 to add a new data view for this index. Pro tip - adding a data view for "kismet_device*" will allow you to see data from both live and historic Kismet data sources. :) 
+7. There are two options - key-based or password based auth - read here for more details - https://docs.bitnami.com/virtual-machine/faq/get-started/enable-ssh-keys/ & https://docs.bitnami.com/virtual-machine/faq/get-started/enable-ssh-password/ 
+8. Copy the two Logstash pipeline files into /opt/bitnami/logstash/pipeline/
+9. Change the URL and username/passwords in each file to match your own settings
+10. Launch Kibana in web browser (Click "Explore on my own")
+11. Navigate the menu to Management > Dev Tools
+12. Using the values in mappings.md, create the kismet_alerts and kismet_device_activity mappings
+13. Restart Logstash ```sudo /opt/bitnami/ctlscript.sh restart logstash```; wait for ~2-3 minutes for data to reach Elasticsearch
+14. In Kibana 8.x or greater, create data viewsCreate data view
+15. Provide a Name, then enter the "kismet_alerts" index
+16. Select @timestamp for the Timestamp field
+17. Save data view to Kibana
+18. Repeat for the "kismet_device_activity" index
+19. Navigate to Discover, select a data view pattern, and browse the data
+20. Create visualizations for the data
+21. Create dashboards of the visualizations
+22. Use the kismetdevices_to_elk.py to push already collected kismetdb files to Elasticsearch
+23. You'll need to change network settings for ES to enable direct connection to port 9200. 
+24. Edit /opt/bitnami/elasticsearch/config/elasticsearch.yml and change the addresses in network to 0.0.0.0. (https://docs.bitnami.com/virtual-machine/apps/elasticsearch/administration/connect-remotely/)
+25. I also had to open port 9200 on my firewall (https://docs.bitnami.com/virtual-machine/faq/administration/use-firewall/)
+26. Warning - this opens up your ELK stack to potential network abuse, so be careful when/where you do this. ES has added a lot of new security features I haven't tested yet. I test this on a local protected network. Please follow ES's guidance for properly securing your stack if using this anywhere other than a local test environment. 
+27.  python3 kismetdevices_to_elk.py -i Kismet-file.kismet -e http://<ELKIP>:9200 -u user -p <password>
+28. This will put the historic devices into a "kismet_devices" index. You'll need to follow the steps in 13-18 to add a new data view for this index. Pro tip - adding a data view for "kismet_device*" will allow you to see data from both live and historic Kismet data sources. :) 
 
 # Bitnami ELK Stack VM Notes
 ```/home/bitnami/bitnami_credentials``` < File containing the username/password for Kibana/ELK/etc 
