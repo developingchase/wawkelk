@@ -3,7 +3,7 @@ A project for analyzing Kismet data in the ELK stack.
 
 Presented at Bsides Idaho 2020 (https://www.youtube.com/watch?v=MU3hu3WuRA0). Slides in repo (Wireless Analysis with Kismet and ELK (WAWKELK).pdf).
 
-Updated in 2023 for the new version of ELK that had some breaking changes.
+NEW - Updated in 2023 for the new version of ELK that had some breaking changes.
 
 # Zero to Hero
 1. Download the Bitnami VM (https://bitnami.com/stack/elk/virtual-machine)
